@@ -9,4 +9,37 @@
     tools:context="com.example.dima.wallpaper.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        >
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.design.widget.TabLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_below="@+id/tabLayout"
+            android:layout_above="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        </android.support.v4.view.ViewPager>
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@android:color/background_dark"
+            app:itemTextColor="@android:color/background_dark"
+            app:menu="@menu/bottom_navigation_menu"
+            >
+
+        </android.support.design.widget.BottomNavigationView>
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
