@@ -22,7 +22,8 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar">
+
+            android:theme="@style/FullScreenTheme">
         </activity>
         <activity android:name=".ListWallpaper">
         </activity>

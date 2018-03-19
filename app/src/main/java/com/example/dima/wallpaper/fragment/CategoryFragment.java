@@ -1,6 +1,7 @@
 package com.example.dima.wallpaper.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.dima.wallpaper.Interface.ItemClickListener;
+import com.example.dima.wallpaper.ListWallpaper;
 import com.example.dima.wallpaper.R;
 import com.example.dima.wallpaper.common.Common;
 import com.example.dima.wallpaper.model.CategoryItem;
@@ -79,7 +81,11 @@ public class CategoryFragment extends Fragment {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        //For detail category
+                        Common.CATEGORY_ID_SELECTED = adapter.getRef(position).getKey();
+                        Common.CATEGORY_SELECTED = model.getName();
+                        Intent intent = new Intent(getActivity(), ListWallpaper.class);
+                        startActivity(intent);
+
                     }
                 });
             }
