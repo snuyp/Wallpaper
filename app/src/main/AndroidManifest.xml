@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.dima.wallpaper">
 
-    <uses-permission android:name="android.permission.INTERNET">
-    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -22,10 +23,11 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
-
             android:theme="@style/FullScreenTheme">
         </activity>
         <activity android:name=".ListWallpaper">
+        </activity>
+        <activity android:name=".ViewWallpaper">
         </activity>
     </application>
 

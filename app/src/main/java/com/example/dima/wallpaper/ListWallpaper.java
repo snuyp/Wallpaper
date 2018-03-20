@@ -1,5 +1,6 @@
 package com.example.dima.wallpaper;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -97,7 +98,9 @@ public class ListWallpaper extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-
+                        Intent intent = new Intent(ListWallpaper.this, ViewWallpaper.class);
+                        Common.sWallpaperItem = model;
+                        startActivity(intent);
                     }
                 });
 
