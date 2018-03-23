@@ -1,6 +1,5 @@
 package com.example.dima.wallpaper;
 
-import android.*;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
@@ -8,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -16,14 +16,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.dima.wallpaper.common.Common;
+import com.example.dima.wallpaper.database.Recents;
+import com.example.dima.wallpaper.database.dataSource.RecentRepository;
+import com.example.dima.wallpaper.database.localDatabase.LocalDatabase;
+import com.example.dima.wallpaper.database.localDatabase.RecentsDataSource;
 import com.example.dima.wallpaper.helper.SaveImageHelper;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -32,6 +36,15 @@ import java.io.IOException;
 import java.util.UUID;
 
 import dmax.dialog.SpotsDialog;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class ViewWallpaper extends AppCompatActivity {
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -39,6 +52,9 @@ public class ViewWallpaper extends AppCompatActivity {
     private FloatingActionButton mFabDownload;
     private CoordinatorLayout mCoordinatorLayout;
     private ImageView mImageView;
+
+    private CompositeDisposable mCompositeDisposable;
+    private RecentRepository mRecentRepository;
 
     private Target mTarget = new Target() {
         @Override
@@ -74,6 +90,14 @@ public class ViewWallpaper extends AppCompatActivity {
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        //Init RoomDataBase
+        mCompositeDisposable = new CompositeDisposable();
+        LocalDatabase database = LocalDatabase.getInstance(this);
+        mRecentRepository = RecentRepository.getInstance(RecentsDataSource.getInstance(database.recentsDAO()));
+
+
+
         mCoordinatorLayout = findViewById(R.id.root_layout);
         mCollapsingToolbarLayout = findViewById(R.id.collapsing);
         mCollapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
@@ -86,6 +110,7 @@ public class ViewWallpaper extends AppCompatActivity {
                 .load(Common.sWallpaperItem.getImageUrl())
                 .into(mImageView);
 
+        addToRecents();
         mFloatingActionButton = findViewById(R.id.fabWallpaper);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +138,40 @@ public class ViewWallpaper extends AppCompatActivity {
             }
         });
     }
+
+    private void addToRecents() {
+        Disposable disposable = Observable.create( new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                Recents recents = new Recents(
+                        Common.sWallpaperItem.getImageUrl(),
+                        Common.sWallpaperItem.getCategoryId(),
+                        String.valueOf(System.currentTimeMillis()));
+
+                mRecentRepository.insertRecents(recents);
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e("ERROR", throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
     private void saveImage()
     {
         AlertDialog dialog = new SpotsDialog(ViewWallpaper.this);
@@ -131,6 +190,7 @@ public class ViewWallpaper extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Picasso.with(this).cancelRequest(mTarget);
+        mCompositeDisposable.clear();
         super.onDestroy();
 
     }

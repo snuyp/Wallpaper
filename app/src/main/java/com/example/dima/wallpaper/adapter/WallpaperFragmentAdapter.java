@@ -26,9 +26,9 @@ public class WallpaperFragmentAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return CategoryFragment.getInstance();
         } else if (position == 1) {
-            return DailyPopularFragment.getInstance();
+            return RecentsFragment.getInstance(context);
         } else if (position == 2) {
-            return RecentsFragment.getInstance();
+            return DailyPopularFragment.getInstance();
         } else return null;
     }
 
