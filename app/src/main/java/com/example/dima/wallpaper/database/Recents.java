@@ -20,13 +20,19 @@ public class Recents {
     private String categoryId;
 
     @ColumnInfo(name="saveTime")
-    @NonNull
+
     private String saveTime;
 
-    public Recents(@NonNull String imageLink, @NonNull String categoryId, @NonNull String saveTime) {
+    @ColumnInfo(name="key")
+
+    private String key;
+
+
+    public Recents(@NonNull String imageLink, @NonNull String categoryId, String saveTime, String key) {
         this.imageLink = imageLink;
         this.categoryId = categoryId;
         this.saveTime = saveTime;
+        this.key = key;
     }
 
     @NonNull
@@ -54,5 +60,14 @@ public class Recents {
 
     public void setSaveTime(@NonNull String saveTime) {
         this.saveTime = saveTime;
+    }
+
+    @NonNull
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(@NonNull String key) {
+        this.key = key;
     }
 }

@@ -16,5 +16,8 @@ public class Common {
 
     public static final int PERMISSIONS_REQUEST_CODE = 999;
     public static WallpaperItem sWallpaperItem = new WallpaperItem();
+    public static String SELECT_BACKGROUND_KEY;
+
+
 
 }

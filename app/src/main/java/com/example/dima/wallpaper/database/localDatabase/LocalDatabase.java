@@ -14,7 +14,7 @@ import static com.example.dima.wallpaper.database.localDatabase.LocalDatabase.DA
  */
 @Database(entities = Recents.class, version = DATABASE_VERSION)
 public abstract class LocalDatabase extends RoomDatabase{
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME="Wallpaper";
 
     public abstract RecentsDAO recentsDAO();

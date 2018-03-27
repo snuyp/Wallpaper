@@ -1,19 +1,20 @@
-package com.example.dima.wallpaper;
+package com.example.dima.wallpaper.fragment;
+
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dima.wallpaper.Interface.ItemClickListener;
+import com.example.dima.wallpaper.R;
+import com.example.dima.wallpaper.ViewWallpaper;
 import com.example.dima.wallpaper.common.Common;
 import com.example.dima.wallpaper.model.WallpaperItem;
 import com.example.dima.wallpaper.viewHolder.ListWallpaperViewHolder;
@@ -26,41 +27,35 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-public class ListWallpaper extends AppCompatActivity {
-    private Query query;
-    private FirebaseRecyclerOptions<WallpaperItem> options;
-    private FirebaseRecyclerAdapter<WallpaperItem, ListWallpaperViewHolder> adapter;
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class TrendingFragment extends Fragment {
 
-    private FirebaseDatabase dataBase;
+    private RecyclerView recyclerView;
+    private FirebaseDatabase database;
     private DatabaseReference categoryBackground;
 
+    private FirebaseRecyclerOptions<WallpaperItem> options;
+    private FirebaseRecyclerAdapter<WallpaperItem, ListWallpaperViewHolder> adapter;
+    private static TrendingFragment sDailyPopularFragment = null;
 
-    private RecyclerView mRecyclerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_wallpaper);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(Common.CATEGORY_SELECTED);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        mRecyclerView = findViewById(R.id.recycler_list_wallpaper);
-        mRecyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-
-        loadBackgroundList();
-
+    public static TrendingFragment getInstance() {
+        if (sDailyPopularFragment == null) {
+            sDailyPopularFragment = new TrendingFragment();
+        }
+        return sDailyPopularFragment;
     }
 
-    private void loadBackgroundList() {
-        query = FirebaseDatabase.getInstance().getReference(Common.STR_WALLPAPER)
-                .orderByChild("categoryId").equalTo(Common.CATEGORY_ID_SELECTED);
+    public TrendingFragment() {
+        //Init Firebase
+        database = FirebaseDatabase.getInstance();
+        categoryBackground = database.getReference(Common.STR_WALLPAPER);
+
+        Query query = categoryBackground.orderByChild("viewCount")
+                .limitToLast(10);
+
         options = new FirebaseRecyclerOptions.Builder<WallpaperItem>()
                 .setQuery(query, WallpaperItem.class)
                 .build();
@@ -68,7 +63,7 @@ public class ListWallpaper extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<WallpaperItem, ListWallpaperViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull final ListWallpaperViewHolder holder, int position, @NonNull final WallpaperItem model) {
-                Picasso.with(getBaseContext())
+                Picasso.with(getActivity())
                         .load(model.getImageUrl())
                         .networkPolicy(NetworkPolicy.OFFLINE)
                         .into(holder.wallpaper, new Callback() {
@@ -79,7 +74,7 @@ public class ListWallpaper extends AppCompatActivity {
 
                             @Override
                             public void onError() {
-                                Picasso.with(getBaseContext())
+                                Picasso.with(getActivity())
                                         .load(model.getImageUrl())
                                         .error(R.drawable.ic_terrain_black_24dp)
                                         .into(holder.wallpaper, new Callback() {
@@ -98,60 +93,70 @@ public class ListWallpaper extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        Intent intent = new Intent(ListWallpaper.this, ViewWallpaper.class);
+                        Intent intent = new Intent(getActivity(), ViewWallpaper.class);
                         Common.sWallpaperItem = model;
-                        Common.SELECT_BACKGROUND_KEY =  adapter.getRef(position).getKey();
+                        Common.SELECT_BACKGROUND_KEY = adapter.getRef(position).getKey();
                         startActivity(intent);
                     }
                 });
-
             }
 
             @Override
             public ListWallpaperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_wallpaper_item, parent, false);
-                int height = parent.getMeasuredHeight()/2;
+                int height = parent.getMeasuredHeight() / 2;
                 itemView.setMinimumHeight(height);
                 return new ListWallpaperViewHolder(itemView);
             }
         };
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_daily_popular, container, false);
+        recyclerView = view.findViewById(R.id.recycler_trending);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        loadTrendingList();
+        return view;
+    }
+
+    private void loadTrendingList() {
         adapter.startListening();
-        mRecyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
+
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onStop() {
+        if (adapter != null) {
+            adapter.stopListening();
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
         if (adapter != null) {
             adapter.startListening();
         }
+        super.onStart();
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        if(adapter != null)
-        {
+    public void onResume() {
+        if (adapter != null) {
             adapter.startListening();
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(adapter != null)
-        {
-            adapter.stopListening();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home)
-        {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+        super.onResume();
     }
 }

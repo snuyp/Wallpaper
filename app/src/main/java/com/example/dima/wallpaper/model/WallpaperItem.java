@@ -7,7 +7,7 @@ package com.example.dima.wallpaper.model;
 public class WallpaperItem {
     private String categoryId;
     private String imageUrl;
-
+    private long viewCount;
     public WallpaperItem() {
     }
 
@@ -30,5 +30,13 @@ public class WallpaperItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(long viewCount) {
+        this.viewCount = viewCount;
     }
 }

@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.dima.wallpaper.fragment.CategoryFragment;
-import com.example.dima.wallpaper.fragment.DailyPopularFragment;
+import com.example.dima.wallpaper.fragment.TrendingFragment;
 import com.example.dima.wallpaper.fragment.RecentsFragment;
 
 public class WallpaperFragmentAdapter extends FragmentPagerAdapter {
@@ -28,7 +28,7 @@ public class WallpaperFragmentAdapter extends FragmentPagerAdapter {
         } else if (position == 1) {
             return RecentsFragment.getInstance(context);
         } else if (position == 2) {
-            return DailyPopularFragment.getInstance();
+            return TrendingFragment.getInstance();
         } else return null;
     }
 
@@ -45,9 +45,7 @@ public class WallpaperFragmentAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Recents";
             case 2:
-                return "Daily Popular";
-            case 3:
-                return "Recents";
+                return "Trending";
         }
         return "";
     }

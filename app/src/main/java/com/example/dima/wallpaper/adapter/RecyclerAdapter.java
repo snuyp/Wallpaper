@@ -81,6 +81,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ListWallpaperViewHolde
                 wallpaperItem.setCategoryId(recents.get(position).getCategoryId());
                 wallpaperItem.setImageUrl(recents.get(position).getImageLink());
                 Common.sWallpaperItem = wallpaperItem;
+                Common.SELECT_BACKGROUND_KEY = recents.get(position).getKey();
                 context.startActivity(intent);
             }
         });
