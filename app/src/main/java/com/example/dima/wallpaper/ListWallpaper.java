@@ -31,10 +31,6 @@ public class ListWallpaper extends AppCompatActivity {
     private FirebaseRecyclerOptions<WallpaperItem> options;
     private FirebaseRecyclerAdapter<WallpaperItem, ListWallpaperViewHolder> adapter;
 
-    private FirebaseDatabase dataBase;
-    private DatabaseReference categoryBackground;
-
-
     private RecyclerView mRecyclerView;
 
     @Override
