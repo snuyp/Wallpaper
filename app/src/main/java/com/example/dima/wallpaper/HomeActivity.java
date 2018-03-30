@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -37,7 +38,7 @@ public class HomeActivity extends AppCompatActivity
     private TabLayout mTabLayout;
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
-
+    private BottomNavigationView mBottomMenu;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -47,6 +48,18 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Wallpaper");
         setSupportActionBar(toolbar);
+
+        mBottomMenu = findViewById(R.id.navigation);
+        mBottomMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId() == R.id.action_upload)
+                {
+                    startActivity(new Intent(HomeActivity.this, UploadWallpaper.class));
+                }
+                return false;
+            }
+        });
 
         mDrawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

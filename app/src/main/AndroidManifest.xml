@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.example.dima.wallpaper">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -13,18 +14,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FullScreenTheme">
-
         <meta-data
             xmlns:tools="http://schemas.android.com/tools"
-            tools:replace="android:value"
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
-            />
+            tools:replace="android:value"/>
 
         <provider
-            android:authorities="com.facebook.app.FacebookContentProvider2112057009078471"
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider2112057009078471"
             android:exported="true"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -40,6 +40,8 @@
         <activity android:name=".ListWallpaper">
         </activity>
         <activity android:name=".ViewWallpaper">
+        </activity>
+        <activity android:name=".UploadWallpaper">
         </activity>
     </application>
 

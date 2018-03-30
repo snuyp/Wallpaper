@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+
     defaultConfig {
         applicationId "com.example.dima.wallpaper"
         minSdkVersion 20
@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.gms:play-services-auth:11.8.0"
+    implementation "com.google.android.gms:play-services-auth:12.0.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.0.2'
@@ -37,21 +37,21 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.0'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-database:11.8.0'
-    implementation 'com.google.firebase:firebase-auth:11.8.0'
-    implementation 'com.google.firebase:firebase-storage:11.8.0'
+    implementation 'com.google.firebase:firebase-database:12.0.0'
+    implementation 'com.google.firebase:firebase-auth:12.0.0'
+    implementation 'com.google.firebase:firebase-storage:12.0.0'
 
     implementation 'com.firebaseui:firebase-ui-database:3.1.2'
-    implementation 'com.firebaseui:firebase-ui-auth:3.1.2'
+    implementation 'com.firebaseui:firebase-ui-auth:3.2.1'
 
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
 
     //RxJava
-    implementation 'android.arch.persistence.room:runtime:1.1.0-alpha3'
-    implementation 'android.arch.persistence.room:rxjava2:1.1.0-alpha3'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.1.0-alpha3'
+    implementation 'android.arch.persistence.room:runtime:1.1.0-beta1'
+    implementation 'android.arch.persistence.room:rxjava2:1.1.0-beta1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.0-beta1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
@@ -60,6 +60,9 @@ dependencies {
 
     //Floating action button
     implementation 'com.github.clans:fab:1.6.4'
+
+    //Material spinner
+    implementation 'com.jaredrummler:material-spinner:1.2.4'
 }
 
 
